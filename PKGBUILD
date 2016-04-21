@@ -1,5 +1,5 @@
 pkgname=brave
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="A web browser automatically blocks ads and trackers"
 arch=("x86_64")
@@ -7,7 +7,7 @@ url="https://www.brave.com/"
 license=('GPL')
 depends=('gconf' 'libcap' 'gtk2' 'nss' 'libxtst' 'libnotify' 'alsa-lib' 'libxss' 'libcups' 'libgnome-keyring' 'libxrandr')
 source=("https://github.com/brave/browser-laptop/releases/download/v${pkgver}dev/brave_${pkgver}_amd64.deb")
-md5sums=('c3e7bfb0bbfcd912e2824e6545d37c6e')
+md5sums=('af262567a0f1e03ad2e070f351c7fd53')
 
 package() {
   tar -xJf $srcdir/data.tar.xz -C $pkgdir
