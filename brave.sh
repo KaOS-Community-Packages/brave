@@ -8,10 +8,12 @@ if [[ -f $USER_FLAGS_FILE ]]; then
    USER_FLAGS="$(cat $USER_FLAGS_FILE | sed 's/#.*//')"
 fi
 
-if [[ ! (-r /proc/sys/kernel/unprivileged_userns_clone && $(< /proc/sys/kernel/unprivileged_userns_clone) == 1 && -n $(zcat /proc/config.gz | grep CONFIG_USER_NS=y) ) ]]; then
-    >&2 echo "User namespaces are not detected as enabled on your system, Brave will run with the sandbox disabled"
-    SANDBOX_FLAG="--no-sandbox"
-fi
+## Sandbox rights have been corrected
+
+# if [[ ! (-r /proc/sys/kernel/unprivileged_userns_clone && $(< /proc/sys/kernel/unprivileged_userns_clone) == 1 && -n $(zcat /proc/config.gz | grep CONFIG_USER_NS=y) ) ]]; then
+#     >&2 echo "User namespaces are not detected as enabled on your system, Brave will run with the sandbox disabled"
+#     SANDBOX_FLAG="--no-sandbox"
+# fi
 
 BRAVE_PEPPER_FLASH_SO=${BRAVE_PEPPER_FLASH_SO:-/usr/lib/PepperFlash/libpepflashplayer.so}
 if [[ -f $BRAVE_PEPPER_FLASH_SO && $BRAVE_USE_FLASH_IF_AVAILABLE == "true" ]]; then

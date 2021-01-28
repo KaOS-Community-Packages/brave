@@ -1,5 +1,5 @@
 pkgname=brave
-pkgver=1.8.86
+pkgver=1.19.88
 pkgrel=1
 pkgdesc="Web browser that blocks ads and trackers by default (binary release)."
 arch=("x86_64")
@@ -8,13 +8,13 @@ license=("MPL2" "BSD" "custom:chromium")
 depends=("gtk3" "nss" "alsa-lib" "libxss")
 optdepends=("cups: Printer support"
             "pepper-flash: Adobe Flash support")
-source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-v${pkgver}-linux-x64.zip"
+source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-browser-${pkgver}-linux-amd64.zip"
         "$pkgname.sh"
         "brave-browser.desktop"
         "logo.png")
 options=(!strip)
-sha512sums=('5dd2441533704d2a53267292bba4827da3cd79d359fd8fe717d2c2f1f7d2e16511110263b421c3b93004dc54434c336ca16b521ed74791046cd7dbfeda2d6f1c'
-            '9a75979ec295d41508538ca7d46e7aa1616f38980aeb1a6c22191d540cdfb13607b60ac40fac9113de3937836479fa64f3f9b6487bdda3346dc77d727ceb2de2'
+sha512sums=('1cf1b9783bc998566a033d434c93499914870ea52715dc447f30ce790f519d6101c856187b5770439b8c9263c4a5ab259dbcb937d612e7d579a29eddf646489f'
+            '76498551badde4e3d6c21c69eb981dbb43028a3fa9d65ded2025248aae9a6a3a1ab69082e1a74d6bb2069810e3dc37fedddda59225949ee808f12543915359af'
             'c21aecaafec43bc1ce1ea3439667efb4c7ea5e54bfa87346a9ae9650de1e90c80174b1610a9216f936f693593816c9585c6be1875b3bd318d067079c06251e92'
             'd7bef52e336bd908d24bf3a084a1fc480831d27a3c80af4c31872465b6a0ce39bdf298e620ae9865526c974465807559cc75610b835e60b4358f65a8a8ff159e')
 noextract=("$pkgname-$pkgver.zip")
@@ -29,6 +29,10 @@ _bsdtardir="brave"
 
 package() {
     install -d -m0755 "$pkgdir/usr/lib"
+    
+    #Correct rights
+    chmod 4755 $_bsdtardir/chrome-sandbox
+    
     cp -a --reflink=auto $_bsdtardir "$pkgdir/usr/lib/$pkgname"
 
     install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
@@ -36,5 +40,7 @@ package() {
     install -Dm0644 "logo.png" "$pkgdir/usr/share/pixmaps/brave.png"
     LICENSES_DIR="$pkgdir/usr/share/licenses/$pkgname"
     mkdir -p "$LICENSES_DIR"
-    mv "$pkgdir/usr/lib/$pkgname/"{LICENSE,LICENSES.chromium.html} "$LICENSES_DIR"
+    if [ -f "$pkgdir/usr/lib/$pkgname/LICENSE" ] && [ -f "$pkgdir/usr/lib/$pkgname/LICENSES.chromium.html" ]; then
+      mv "$pkgdir/usr/lib/$pkgname/"{LICENSE,LICENSES.chromium.html} "$LICENSES_DIR"
+    fi
 }
