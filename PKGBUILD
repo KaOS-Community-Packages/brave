@@ -1,10 +1,11 @@
 pkgname=brave
-pkgver=1.44.112
+_pkgname=Brave
+__pkgname=brave-bin
+pkgver=1.48.171
 pkgrel=1
-epoch=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
 arch=(x86_64)
-url=https://brave.com
+url=https://brave.com/linux/#release-channel-installation
 license=(MPL2 BSD custom:chromium)
 depends=(alsa-lib
          gtk3
@@ -15,33 +16,32 @@ depends=(alsa-lib
 optdepends=('cups: Printer support'
             'libnotify: Native notification support')
 options=(!strip)
-source=("$pkgname-$pkgver.zip::https://github.com/brave/brave-browser/releases/download/v$pkgver/brave-browser-$pkgver-linux-amd64.zip"
+source=("https://github.com/brave/brave-browser/releases/download/v$pkgver/brave-browser-$pkgver-linux-amd64.zip"
         "$pkgname.sh"
-        'brave-browser.desktop')
-noextract=("$pkgname-$pkgver.zip")
-sha256sums=('8d073bac2c2c75b9fea02e070c64e03a9680884d7c2756df1414c0990a69320d'
-            'f92640710f8306c473590ad37c611c37279287e63b4acd0b5b81c11dcb6c2618'
-            'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
+        "brave-browser.desktop")
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP')
 
 prepare() {
-	mkdir -p brave
-	bsdtar -xf "$pkgname-$pkgver.zip" -C brave
-	chmod +x brave/brave
+	mkdir -p Brave
+	bsdtar -xf "$pkgname-browser-$pkgver-linux-amd64.zip" -C Brave
+	chmod +x Brave/brave
 }
 
 package() {
-	install -dm0755 "$pkgdir/usr/lib"
-	cp -a brave "$pkgdir/usr/lib/$pkgname"
+	install -dm0755 "$pkgdir/opt"
+	cp -a Brave "$pkgdir/opt/$_pkgname"
 
 	# allow firejail users to get the suid sandbox working
-	chmod 4755 "$pkgdir/usr/lib/$pkgname/chrome-sandbox"
+	chmod 4755 "$pkgdir/opt/$_pkgname/chrome-sandbox"
 
 	install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
 	install -Dm0644 -t "$pkgdir/usr/share/applications/" "brave-browser.desktop"
-	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" brave/LICENSE
+	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" Brave/LICENSE
 	pushd "$pkgdir/usr/"
 	for size in 16x16 24x24 32x32 48x48 64x64 128x128 256x256; do
-		install -Dm0644 "lib/$pkgname/product_logo_${size/x*/}.png" \
+		install -Dm0644 "$pkgdir/opt/$_pkgname/product_logo_${size/x*/}.png" \
 			"share/icons/hicolor/$size/apps/brave-desktop.png"
 	done
 }
