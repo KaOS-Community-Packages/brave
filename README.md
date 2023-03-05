@@ -1,9 +1,9 @@
-# brave
-A web browser automatically blocks ads and trackers
+# Brave Web Browser
+Web browser that blocks ads and trackers by default
 
 https://www.brave.com/
 
-Install:
+Install:   
 ```
 kcp -i brave
 ```
