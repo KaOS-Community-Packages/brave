@@ -1,9 +1,9 @@
 # Brave Web Browser
-Web browser that blocks ads and trackers by default
+Web browser that blocks ads and trackers by default.
 
-https://www.brave.com/
+HOME: https://www.brave.com/ | SOURCE: https://github.com/brave/brave-browser
 
-Install:   
+#### Install:   
 ```
 kcp -i brave
 ```
