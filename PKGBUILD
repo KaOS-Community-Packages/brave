@@ -37,7 +37,7 @@ package() {
 	chmod 4755 "${pkgdir}/opt/${pkgname}/chrome-sandbox"
 
 	install -Dm0755 "${pkgname}.sh" "${pkgdir}/usr/bin/brave"
-	install -Dm0644 -t "${pkgdir}/usr/share/appl0ications/" "brave-browser.desktop"
+	install -Dm0644 -t "${pkgdir}/usr/share/applications/" "brave-browser.desktop"
 	install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}/" ${srcdir}/LICENSE
 	pushd "${pkgdir}/usr/"
 	for size in 16x16 24x24 32x32 48x48 64x64 128x128 256x256; do
