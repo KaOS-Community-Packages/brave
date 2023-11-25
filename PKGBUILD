@@ -1,28 +1,20 @@
 pkgname=brave
 _pkgname=brave-bin
-pkgver=1.59.124
-_chromiumver=118.0.5993.117
+pkgver=1.60.118
+_chromiumver=119.0.6045.163
 pkgrel=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
-arch=(x86_64)
-url=https://brave.com
-license=(MPL2 BSD custom:chromium)
-depends=(alsa-lib
-         gtk3
-         libxss
-         nss
-         ttf-freefont
-         ttf-liberation
-         ttf-ms-fonts)
+arch=('x86_64')
+url='https://brave.com'
+license=('MPL2 BSD custom:chromium')
+depends=('alsa-lib' 'gtk3' 'libxss' 'nss' 'ttf-freefont' 'ttf-liberation' 'ttf-ms-fonts')
 optdepends=('cups: Printer support'
             'libnotify: Native notification support')
 options=(!strip)
-source=("${pkgname}-${pkgver}.zip::https://github.com/brave/brave-browser/releases/download/v$pkgver/brave-browser-$pkgver-linux-amd64.zip"
+source=("${pkgname}-${pkgver}.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-browser-${pkgver}-linux-amd64.zip"
         "${pkgname}.sh"
         "brave-browser.desktop")
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP')
 
 prepare() {
 	bsdtar -xf "${pkgname}-${pkgver}.zip"
