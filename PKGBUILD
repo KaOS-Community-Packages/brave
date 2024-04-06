@@ -1,45 +1,43 @@
 pkgname=brave
-_pkgname=brave-bin
-pkgver=1.62.165
-_chromiumver=121.0.6167.184
+_pkgname=brave-browser
+pkgver=1.64.116
 pkgrel=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
 arch=('x86_64')
 url='https://brave.com'
-license=('MPL2 BSD custom:chromium')
-depends=('alsa-lib' 'gtk3' 'libxss' 'nss' 'ttf-freefont' 'ttf-liberation' 'ttf-ms-fonts')
+license=('MPL2' 'BSD' 'custom:chromium')
+depends=('alsa-lib' 'gtk3' 'libxss' 'nss' 'ttf-freefont' 'ttf-liberation')
 optdepends=('cups: Printer support'
-            'libnotify: Native notification support')
-options=(!strip)
-source=("${pkgname}-${pkgver}.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/brave-browser-${pkgver}-linux-amd64.zip"
-        "${pkgname}.sh"
-        "brave-browser.desktop")
-sha256sums=('21b780f2cb608ca1c96000b3bed2aa8b69c24b743cf1d6c18dfc752491b19e8e'
-            '18e149cb7e76d8ffea63793e4471e7233bda8345ebf14896fdd1e07385cdac32'
-            'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
-
-prepare() {
-	bsdtar -xf "${pkgname}-${pkgver}.zip"
-	chmod +x ${srcdir}
-}
+			'sane: Scanner support'
+			'libnotify: Native notification support')
+options=('!strip')
+source=("${_pkgname}-${pkgver}-linux-amd64.zip::https://github.com/brave/brave-browser/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-amd64.zip"
+		"${pkgname}.desktop" )
+sha256sums=('SKIP' 'SKIP')
 
 package() {
-	msg "Prepare dirs and copy files"
-	install -dm0755 "${pkgdir}/opt"
-	cp -a ${srcdir} "${pkgdir}/opt/${pkgname}"
+	msg2 "Unpacking SOURCE files of the downloaded ZIP binary archive"
+	mkdir -p "${pkgdir}/opt/Brave/"
+	bsdtar -xf "${srcdir}/${_pkgname}-${pkgver}-linux-amd64.zip" -C "${pkgdir}/opt/Brave/"
 
-	install -Dm0755 "${pkgname}.sh" "${pkgdir}/usr/bin/brave"
-	install -Dm0644 -t "${pkgdir}/usr/share/applications/" "brave-browser.desktop"
-	install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}/" ${srcdir}/LICENSE
-	pushd "${pkgdir}/usr/"
+	msg2 "Removing unnecessary file properties from the DEB binary package"
+	rm -fdrv "${pkgdir}/opt/Brave/cron/"
 
-	msg "Copy icons"
-	for size in 16x16 24x24 32x32 48x48 64x64 128x128 256x256; do
-		install -Dm0644 "${pkgdir}/opt/${pkgname}/product_logo_${size/x*/}.png" \
-			"share/icons/hicolor/${size}/apps/brave-desktop.png"
-	done
+	chmod 0755 "${pkgdir}/opt/Brave/"
+	# Allow FireJail users to get the SUID sandbox working
+	msg2 "Impose sandboxing by modifying SUID properties"
+	chmod 4755 -v "${pkgdir}/opt/Brave/chrome-sandbox"
 
-	msg "Correct rights"
-	# allow firejail users to get the suid sandbox working
-	chmod 4755 "${pkgdir}/opt/${pkgname}/chrome-sandbox"
+	msg2 "Installing and linking files from SOURCE to the system"
+	install -Dm0644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm0644 "${pkgdir}/opt/Brave/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm0644 "${pkgdir}/opt/Brave/product_logo_256.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+	install -d "${pkgdir}/usr/share/icons/hicolor/256x256/apps/"
+	ln -sv "/opt/Brave/product_logo_256.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${pkgname}.png"
+
+	install -d "${pkgdir}/usr/bin/"
+	ln -sv "/opt/Brave/brave" -t "${pkgdir}/usr/bin/"
+
+	msg2 "DONE"
 }
