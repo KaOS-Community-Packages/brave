@@ -1,7 +1,7 @@
 pkgname=brave
 _pkgname=brave-bin
-pkgver=1.80.113
-_chromiumver=138.0.7204.49
+pkgver=1.80.115
+_chromiumver=138.0.7204.97
 pkgrel=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
 arch=('x86_64')
